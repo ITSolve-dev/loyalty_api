@@ -1,0 +1,53 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+fastapi = "*"
+uvicorn = {extras = ["standard"], version = "*"}
+sqlalchemy = "*"
+alembic = "*"
+dependency-injector = "*"
+loguru = "*"
+python-dotenv = "*"
+asyncpg = "*"
+psycopg2 = "*"
+pydantic-settings = "*"
+aioredis = "*"
+pytest = "*"
+httpx = "*"
+fastapi-versioning = "*"
+fastapi-jwt = "*"
+sqlalchemy-utils = "*"
+passlib = "*"
+pydantic = {extras = ["email"], version = "*"}
+pyjwt = "*"
+
+[dev-packages]
+ruff = "*"
+black = "*"
+pre-commit = "*"
+isort = "*"
+mypy = "*"
+bandit = "*"
+
+[requires]
+python_version = "3.10"
+
+[scripts]
+server = "python main.py"
+shell = "ipython --ipython-dir=./.ipython"
+admin = "gunicorn --bind 0.0.0.5001 admin:app --reload"
+seed = "python scripts/run_seeds.py"
+migrate = "alembic upgrade head"
+manual_migration = "alembic revision -m"
+auto_migration = "alembic revision --autogenerate"
+test = "pytest --disable-warnings -v"
+check-lint = "ruff check ."
+check-imports = "isort --diff --atomic ."
+check-format = "black --diff ."
+check-bandit= "bandit -c pyproject.toml -r ."
+check-types = "mypy --config-file pyproject.toml ."
+fix-imports = "isort ."
+fix-format = "black ."

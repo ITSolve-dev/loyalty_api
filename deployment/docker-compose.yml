@@ -1,0 +1,91 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: ${PROJECT__NAME}-api
+    init: true
+    image: ${DOCKER__USERNAME}/${PROJECT__NAME}:${PROJECT__VERSION}
+    env_file:
+      - ../.env
+    environment:
+      DATABASE__HOST: db
+      REDIS__HOST: redis
+    ports:
+      - ${SERVER__PORT}:${SERVER__PORT}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - db
+      - redis
+
+  db:
+    container_name: ${PROJECT__NAME}-db
+    init: true
+    restart: always
+    image: postgres:15.3
+    environment:
+      # POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      POSTGRES_PASSWORD: ${DATABASE__PASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: md5
+      POSTGRES_INITDB_ARGS: --auth=md5
+      POSTGRES_USER: ${DATABASE__USER}
+      POSTGRES_DB: ${DATABASE__NAME}
+    ports:
+      - 54320:5432
+    hostname: db
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - db
+    volumes:
+      - db-volume:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE__USER} -d ${DATABASE__NAME}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    container_name: ${PROJECT__NAME}-redis
+    image: redis:latest
+    command: redis-server
+    volumes:
+      - redis-volume:/var/lib/redis
+      - redis-config-volume:/usr/local/etc/redis/redis.conf
+    ports:
+      - 63790:6379
+    networks:
+      - redis
+
+  redis-commander:
+    container_name: ${PROJECT__NAME}-redis-commander
+    image: rediscommander/redis-commander:latest
+    environment:
+      REDIS_HOSTS: redis
+      REDIS_HOST: redis
+      REDIS_PORT: redis:6379
+      REDIS_PASSWORD: ${REDIS__PASSWORD}
+      HTTP_USER: root
+      HTTP_PASSWORD: root
+    ports:
+      - 8081:8081
+    networks:
+      - redis
+    depends_on:
+      - redis
+
+volumes:
+  db-volume:
+  redis-volume:
+  redis-config-volume:
+
+networks:
+  db:
+    driver: bridge
+  redis:
+    driver: bridge

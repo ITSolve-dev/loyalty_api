@@ -1,0 +1,12 @@
+.github
+.git
+.gitignore
+.idea
+.venv
+README.md
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.pre-commit-config.yaml
+!/deployment/
+.env*
