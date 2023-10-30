@@ -4,7 +4,7 @@ from .profile_schemas import (
     RetrieveProfileSchema,
     UpdateProfileSchema,
     DeleteProfileSchema,
-    AddProfileRolesSchema,
+    RetrieveUserWithProfileSchema,
 )
 
 __all__ = (
@@ -13,5 +13,5 @@ __all__ = (
     "UpdateProfileSchema",
     "RetrieveProfileSchema",
     "DeleteProfileSchema",
-    "AddProfileRolesSchema",
+    "RetrieveUserWithProfileSchema",
 )

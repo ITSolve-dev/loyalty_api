@@ -6,12 +6,12 @@ from .exceptions import (
     AlreadyExistsInstanceException,
     NotFoundInstanceException,
     UnknownException,
-    ValidationDataInstanceException
+    ValidationDataInstanceException,
 )
 from .internals import get_application
 from .routers import VersionedAPIRouter
 from .auth import AuthRoute
-from .orm_schemas import OrmSchema, DateTimeMixinSchema
+from .base_schemas import OrmSchema, DateTimeMixinSchema, ListModelSchema
 from .base_repo import BaseRepo, ICreateRepo, IDeleteRepo, IUpdateRepo, IRetrieveRepo
 from .base_case import BaseCases, handle_validation_exc
 
@@ -35,5 +35,6 @@ __all__ = (
     IDeleteRepo,
     IUpdateRepo,
     IRetrieveRepo,
-    handle_validation_exc
+    handle_validation_exc,
+    ListModelSchema,
 )

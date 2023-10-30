@@ -22,14 +22,6 @@ def get_application() -> FastAPI:
         summary=settings.project.docs.SUMMARY,
     )
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-
     for version in settings.project.API_VERSIONS.split(","):
         routers = GetRouters.call(version)
         for router in routers:
@@ -44,5 +36,12 @@ def get_application() -> FastAPI:
 
     # decorate Fast API application with some additional handlers for events, requests, etc
     decorate_fast_api(v_app)
+    v_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
     return v_app

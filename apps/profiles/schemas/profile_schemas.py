@@ -1,9 +1,9 @@
-from typing import Iterable
-from pydantic import BaseModel
+from typing import Optional
+from pydantic import BaseModel, Field
 
 from core import OrmSchema, DateTimeMixinSchema
 
-from apps.users.schemas import RetrieveUserSchema, RetrieveRoleSchema
+from apps.users.schemas import RetrieveUserSchema
 from apps.users.entities import RoleType
 
 from ..entities import ProfileEntity
@@ -15,11 +15,7 @@ class ProfileSchema(ProfileEntity, OrmSchema):
 
 class CreateProfileSchema(BaseModel):
     user_id: int
-    role: RoleType
-
-
-class AddProfileRolesSchema(BaseModel):
-    roles: Iterable[RoleType]
+    role: Optional[RoleType] = Field(default=RoleType.CUSTOMER)
 
 
 class UpdateProfileSchema(ProfileEntity):
@@ -28,7 +24,10 @@ class UpdateProfileSchema(ProfileEntity):
 
 class RetrieveProfileSchema(ProfileSchema, DateTimeMixinSchema):
     user: RetrieveUserSchema
-    roles: Iterable[RetrieveRoleSchema]
+
+
+class RetrieveUserWithProfileSchema(RetrieveUserSchema):
+    profile: RetrieveProfileSchema
 
 
 class DeleteProfileSchema(OrmSchema):

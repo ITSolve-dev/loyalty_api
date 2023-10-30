@@ -1,5 +1,8 @@
+from pprint import pformat
+
 from dependency_injector.wiring import Provide, inject
-from fastapi import Depends
+from fastapi import Depends, Body
+from loguru import logger
 
 from core import VersionedAPIRouter, ErrorDetails
 
@@ -14,8 +17,9 @@ router = VersionedAPIRouter(
 @router.post("", response_model=RetrieveScanSchema)
 @inject
 async def create_scan(
-    data: CreateScanSchema, scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"])
+    data: CreateScanSchema = Body(), scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"])
 ) -> RetrieveScanSchema:
+    logger.info(pformat(data))
     return await scans_cases.create(data=data)
 
 

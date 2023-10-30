@@ -23,6 +23,11 @@ class Scan(Base):
         "Profile", lazy="joined", primaryjoin="Profile.id == Scan.subject_profile_id"
     )
 
+    loyalty_ticket_id = sa.Column(sa.ForeignKey("loyalty_tickets.id"), nullable=False)
+    loyalty_ticket = sa.orm.relationship("LoyaltyTicket", back_populates="scans", lazy="selectin")
+
+    institution = sa.orm.relationship("Institution", secondary="loyalty_tickets", uselist=False)
+
     created_at = sa.Column(sa.DateTime, nullable=False, server_default=sa.sql.func.now())
 
     @sa.orm.validates("amount")

@@ -11,5 +11,5 @@ class ProfileCases(BaseCases[DefaultProfileRepo]):
     async def retrieve(self, profile_id: int) -> RetrieveProfileSchema:
         return await self.repo.retrieve(id=profile_id)
 
-    async def add_roles(self, profile_id: int, data: AddProfileRolesSchema) -> RetrieveProfileSchema:
-        return await self.repo.add_roles(data=data, id=profile_id)
+    async def get_profiles_by_telegram_id(self, telegram_id: int) -> list[RetrieveProfileSchema]:
+        return await self.repo.get_profiles_by_telegram_id(telegram_id=telegram_id)

@@ -17,3 +17,5 @@ class Institution(Base, DateTimeMixin):
     members = sa.orm.relationship(
         "ProfileToInstitution", back_populates="institution", lazy="joined"
     )
+
+    customer_tickets = sa.orm.relationship("LoyaltyTicket", back_populates="institution", lazy="joined")

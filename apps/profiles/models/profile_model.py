@@ -6,6 +6,8 @@ from db.models import DateTimeMixin
 
 from apps.scans.models import Scan
 
+from ..entities import RoleType
+
 
 class Profile(Base, DateTimeMixin):
     __tablename__ = "profiles"
@@ -15,11 +17,13 @@ class Profile(Base, DateTimeMixin):
     user_id = sa.Column(sa.ForeignKey("users.id"), nullable=False)
     user = sa.orm.relationship("User", back_populates="profiles", lazy="selectin")
 
-    roles = sa.orm.relationship("Role", back_populates="profile", lazy="joined")
+    role = sa.Column(sa.Enum(RoleType), default=RoleType.CUSTOMER, nullable=False)
 
     institutions = sa.orm.relationship(
         "ProfileToInstitution", back_populates="profile", lazy="joined"
     )
+
+    tickets = sa.orm.relationship("LoyaltyTicket", back_populates="profile", lazy="selectin")
 
     # scans = sa.orm.relationship(
     #     "Profile", secondary="Scan", lazy="joined", primaryjoin=(Scan.subject_profile_id == id)

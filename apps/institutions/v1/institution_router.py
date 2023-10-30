@@ -20,7 +20,7 @@ async def create_institution(
     return await institution_cases.create(data=data)
 
 
-@router.post("/{id}", response_model=RetrieveInstitutionSchema)
+@router.get("/{id}", response_model=RetrieveInstitutionSchema)
 @inject
 async def get_institution_by_id(
     id: int,

@@ -1,8 +1,7 @@
-from typing import Iterable
 from pydantic import BaseModel
 
-from apps.users.entities.role_entity import RoleType
 from apps.users.entities.user_entity import UserEntity
+from .role_entity import RoleType
 
 
 class ProfileEntity(BaseModel):
@@ -11,4 +10,4 @@ class ProfileEntity(BaseModel):
     """
 
     user: UserEntity
-    roles: Iterable[RoleType]
+    role: RoleType
