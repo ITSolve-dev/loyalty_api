@@ -11,7 +11,7 @@ router = VersionedAPIRouter(
 )
 
 
-@router.post("", response_model=RetrieveInstitutionSchema)
+@router.post("", response_model=RetrieveInstitutionSchema, operation_id="createInstitution")
 @inject
 async def create_institution(
     data: CreateInstitutionSchema,
@@ -20,7 +20,7 @@ async def create_institution(
     return await institution_cases.create(data=data)
 
 
-@router.get("/{id}", response_model=RetrieveInstitutionSchema)
+@router.get("/{id}", response_model=RetrieveInstitutionSchema, operation_id="getInstitutionById")
 @inject
 async def get_institution_by_id(
     id: int,
@@ -29,7 +29,9 @@ async def get_institution_by_id(
     return await institution_cases.retrieve(id=id)
 
 
-@router.post("/{id}/users")
+@router.post(
+    "/{id}/users", response_model=RetrieveInstitutionSchema, operation_id="addUsersToInstitution"
+)
 @inject
 async def add_users_to_institution(
     id: int,
@@ -37,3 +39,16 @@ async def add_users_to_institution(
     institution_cases: InstitutionCases = Depends(Provide["institutions_app.institution_cases"]),
 ):
     return await institution_cases.add_users(id=id, user_ids=data.user_ids)
+
+
+@router.get(
+    "/profile/{profile_id}",
+    response_model=ListInstitutionSchema,
+    operation_id="getInstitutionsByCustomerProfileId",
+)
+@inject
+async def get_institutions_by_customer_profile_id(
+    profile_id: int,
+    institution_cases: InstitutionCases = Depends(Provide["institutions_app.institution_cases"]),
+):
+    return await institution_cases.get_by_customer_profile_id(profile_id=profile_id)

@@ -9,7 +9,6 @@ from .scans_schemas import (
     ScanSchema,
     LightScanSchema,
     CreateScanWithoutLoyaltySchema,
-    RetrieveScanSchema,
 )
 
 
@@ -24,7 +23,7 @@ class CreateLoyaltyTicketSchema(BaseModel):
     profile_id: int
     institution_id: int
     activated: Optional[bool] = Field(default=False)
-    scans: Sequence[CreateScanWithoutLoyaltySchema]
+    scans: Optional[Sequence[CreateScanWithoutLoyaltySchema]] = []
 
 
 class RetrieveLoyaltyTicketSchema(OrmSchema):

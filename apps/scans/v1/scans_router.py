@@ -14,18 +14,19 @@ router = VersionedAPIRouter(
 )
 
 
-@router.post("", response_model=RetrieveScanSchema)
+@router.post("", response_model=RetrieveScanSchema, operation_id="createScan")
 @inject
 async def create_scan(
-    data: CreateScanSchema = Body(), scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"])
+    data: CreateScanSchema = Body(),
+    scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"]),
 ) -> RetrieveScanSchema:
     logger.info(pformat(data))
     return await scans_cases.create(data=data)
 
 
-@router.get("/{scan_id}", response_model=RetrieveScanSchema)
+@router.get("/{scan_id}", response_model=RetrieveScanSchema, operation_id="getScanById")
 @inject
-async def get_detailed_scan(
+async def get_scan_by_id(
     scan_id: int, scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"])
 ):
     return await scans_cases.retrieve(id=scan_id)

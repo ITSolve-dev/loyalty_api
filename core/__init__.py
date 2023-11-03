@@ -7,6 +7,7 @@ from .exceptions import (
     NotFoundInstanceException,
     UnknownException,
     ValidationDataInstanceException,
+    PermissionsDeniedException,
 )
 from .internals import get_application
 from .routers import VersionedAPIRouter
@@ -37,4 +38,5 @@ __all__ = (
     IRetrieveRepo,
     handle_validation_exc,
     ListModelSchema,
+    PermissionsDeniedException,
 )

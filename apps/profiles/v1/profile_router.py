@@ -19,7 +19,7 @@ router = VersionedAPIRouter(
 )
 
 
-@router.post("", response_model=RetrieveProfileSchema)
+@router.post("", response_model=RetrieveProfileSchema, operation_id="createProfile")
 @inject
 async def create_profile(
     profile_data: CreateProfileSchema,
@@ -28,30 +28,46 @@ async def create_profile(
     return await profile_cases.create(data=profile_data)
 
 
-@router.get("/{profile_id}", response_model=RetrieveProfileSchema)
+@router.get("/{profile_id}", response_model=RetrieveProfileSchema, operation_id="getProfileById")
 @inject
-async def get_detailed_profile(
+async def get_profile_by_id(
     profile_id: int,
     profile_cases: ProfileCases = Depends(Provide["profiles_app.profile_cases"]),
 ):
     return await profile_cases.retrieve(profile_id=profile_id)
 
 
-@router.get("/telegram/{telegram_id}", response_model=list[RetrieveProfileSchema])
+@router.get(
+    "/telegram/{telegram_id}",
+    response_model=list[RetrieveProfileSchema],
+    operation_id="getProfilesByTelegramId",
+)
 @inject
-async def get_detailed_profile(
+async def get_profiles_by_telegram_id(
     telegram_id: int,
     profile_cases: ProfileCases = Depends(Provide["profiles_app.profile_cases"]),
 ) -> list[RetrieveProfileSchema]:
     result = await profile_cases.get_profiles_by_telegram_id(telegram_id=telegram_id)
-    logger.info(pformat(result))
     return result
 
 
-@router.get("/{profile_id}/scans", response_model=ListScanSchema, operation_id="addRolesToProfile")
+@router.get(
+    "/{profile_id}/scans", response_model=ListScanSchema, operation_id="getScansByProfileId"
+)
 @inject
-async def add_roles_to_profile(
+async def get_scans_by_profile_id(
     profile_id: int,
     scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"]),
 ):
     return await scans_cases.get_scans_profile(id=profile_id)
+
+
+@router.get(
+    "/{profile_id}/scanned", response_model=ListScanSchema, operation_id="getScannedByProfileId"
+)
+@inject
+async def get_scanned_by_profile_id(
+    profile_id: int,
+    scans_cases: ScansCases = Depends(Provide["scans_app.scans_cases"]),
+):
+    return await scans_cases.get_scanned_profile(id=profile_id)

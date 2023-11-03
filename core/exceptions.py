@@ -56,6 +56,12 @@ class ValidationDataInstanceException(DeclareModuleAppException):
     DESCRIPTION = "Wrong data sent"
 
 
+class PermissionsDeniedException(DeclareModuleAppException):
+    STATUS_CODE = status.HTTP_403_FORBIDDEN
+    ERROR = "permissions_denied"
+    DESCRIPTION = "Permissions denied"
+
+
 class UnknownException(DeclareModuleAppException):
     STATUS_CODE = status.HTTP_400_BAD_REQUEST
     ERROR = "unknown"

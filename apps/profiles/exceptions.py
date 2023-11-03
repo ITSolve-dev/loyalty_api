@@ -3,6 +3,7 @@ from core import (
     DeclareModuleAppException,
     NotFoundInstanceException,
     AlreadyExistsInstanceException,
+    PermissionsDeniedException,
 )
 
 
@@ -22,3 +23,7 @@ class ProfileAlreadyExistsException(ProfilesException, AlreadyExistsInstanceExce
 class ProfileRolesExistException(ProfilesException):
     ERROR = "exist_roles"
     DESCRIPTION = "All that roles already exist in that profile"
+
+
+class ProfilePermissionsDeniedException(ProfilesException, PermissionsDeniedException):
+    DESCRIPTION = "Profile permissions denied"

@@ -13,5 +13,5 @@ if __name__ == "__main__":
         reload=settings.server.RELOAD,
         host=settings.server.HOST,
         port=settings.server.PORT,
-        workers=4,
+        workers=settings.server.WORKERS,
     )

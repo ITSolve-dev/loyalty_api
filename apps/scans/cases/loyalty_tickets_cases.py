@@ -10,3 +10,6 @@ class LoyaltyTicketsCases(BaseCases[DefaultLoyaltyTicketsRepo]):
 
     async def retrieve(self, id: int) -> RetrieveLoyaltyTicketSchema:
         return await self.repo.retrieve(id=id)
+
+    async def activate_loyalty_ticket(self, id: int) -> RetrieveLoyaltyTicketSchema:
+        return await self.repo.activate_ticket(id=id)

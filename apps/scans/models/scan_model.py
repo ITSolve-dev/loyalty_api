@@ -24,7 +24,9 @@ class Scan(Base):
     )
 
     loyalty_ticket_id = sa.Column(sa.ForeignKey("loyalty_tickets.id"), nullable=False)
-    loyalty_ticket = sa.orm.relationship("LoyaltyTicket", back_populates="scans", lazy="selectin")
+    loyalty_ticket = sa.orm.relationship(
+        "LoyaltyTicket", back_populates="scans", lazy="selectin", uselist=False
+    )
 
     institution = sa.orm.relationship("Institution", secondary="loyalty_tickets", uselist=False)
 

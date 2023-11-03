@@ -21,3 +21,7 @@ class LoyaltyTicket(Base, DateTimeMixin):
     activated = sa.Column(sa.Boolean, default=False)
 
     scans = sa.orm.relationship("Scan", back_populates="loyalty_ticket", lazy="selectin")
+
+    @property
+    def amount(self) -> int:
+        return sum(map(lambda scan: scan.amount, self.scans))

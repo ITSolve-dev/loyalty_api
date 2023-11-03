@@ -18,3 +18,6 @@ class InstitutionCases(BaseCases[DefaultInstitutionRepo]):
 
     async def add_users(self, id: int, user_ids: Sequence[int]) -> RetrieveInstitutionSchema:
         return await self.repo.add_users(id=id, user_ids=user_ids)
+
+    async def get_by_customer_profile_id(self, profile_id: int) -> ListInstitutionSchema:
+        return await self.repo.get_by_customer_profile_id(id=profile_id)

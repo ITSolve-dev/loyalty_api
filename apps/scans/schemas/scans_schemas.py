@@ -18,7 +18,7 @@ class ScanSchema(OrmSchema):
 class CreateScanSchema(BaseModel):
     object_profile_id: int
     subject_profile_id: int
-    loyalty_ticket_id: int
+    # loyalty_ticket_id: int
     amount: Optional[int] = 1
 
 

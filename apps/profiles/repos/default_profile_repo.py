@@ -12,34 +12,29 @@ from ..exceptions import ProfileNotFoundException
 
 
 class DefaultProfileRepo(IProfileRepo):
-
-    async def create(
-        self, data: CreateProfileSchema
-    ) -> Optional[RetrieveProfileSchema]:
+    async def create(self, data: CreateProfileSchema) -> Optional[RetrieveProfileSchema]:
         async with start_session(self.db_session) as session:
-            query = (
-                sa.insert(self.table)
-                .values(**data.model_dump())
-                .returning(self.table.id)
-            )
+            query = sa.insert(self.table).values(**data.model_dump()).returning(self.table.id)
             profile_id: int = await session.scalar(query)
 
-            query = (
-                sa.select(self.table)
-                .where(self.table.id == profile_id)
-            )
+            query = sa.select(self.table).where(self.table.id == profile_id)
             profile: Profile = await session.scalar(query)
             return RetrieveProfileSchema.model_validate(profile)
 
     async def delete(self, id: int) -> Optional[RetrieveProfileSchema]:
         pass
 
+    async def get_profile_instance(self, id: int) -> Profile:
+        async with start_session(self.db_session) as session:
+            query = sa.select(self.table).where(self.table.id == id)
+            profile: Profile = await session.scalar(query)
+            if not profile:
+                raise ProfileNotFoundException
+        return profile
+
     async def retrieve(self, id: int) -> Optional[RetrieveProfileSchema]:
         async with start_session(self.db_session) as session:
-            query = (
-                sa.select(self.table)
-                .where(self.table.id == id)
-            )
+            query = sa.select(self.table).where(self.table.id == id)
             profile: Profile = await session.scalar(query)
             if not profile:
                 raise ProfileNotFoundException
@@ -47,9 +42,7 @@ class DefaultProfileRepo(IProfileRepo):
 
     async def get_profiles_by_telegram_id(self, telegram_id: int) -> List[RetrieveProfileSchema]:
         async with start_session(self.db_session) as session:
-            query = (
-                sa.select(self.table).where(self.table.user.has(telegram_id=telegram_id))
-            )
+            query = sa.select(self.table).where(self.table.user.has(telegram_id=telegram_id))
 
             profiles = (await session.scalars(query)).unique().all()
             ta = TypeAdapter(List[RetrieveProfileSchema])

@@ -9,10 +9,10 @@ from apps.users.models import User
 from apps.users.entities import RoleType
 from apps.profiles.schemas import CreateProfileSchema
 from apps.profiles.repos import DefaultProfileRepo
+from apps.scans.models import LoyaltyTicket
 
 from ..schemas import *
 from ..exceptions import *
-from ..models import ProfileToInstitution
 from .interface_institution_repo import IInstitutionRepo
 from .default_institution_type_repo import DefaultInstitutionTypeRepo
 from .default_members_repo import DefaultMemberRepo
@@ -75,5 +75,23 @@ class DefaultInstitutionRepo(IInstitutionRepo):
                     CreateProfileSchema(user_id=user_id, role=RoleType.EMPLOYEE)
                 )
 
-                await members_repo.create(CreateMemberSchema(institution_id=id, profile_id=profile.id))
+                await members_repo.create(
+                    CreateMemberSchema(institution_id=id, profile_id=profile.id)
+                )
         return await self.retrieve(id=id)
+
+    async def get_by_customer_profile_id(self, id: int) -> ListInstitutionSchema:
+        async with start_session(self.db_session) as session:
+            query = (
+                sa.select(self.table)
+                .where(LoyaltyTicket.profile_id == id)
+                .options(joinedload(self.table.customer_tickets))
+            )
+            institutions = list(
+                filter(
+                    lambda institution: id
+                    in list(map(lambda ticket: ticket.id, institution.customer_tickets)),
+                    (await session.scalars(query)).unique().all(),
+                )
+            )
+        return ListInstitutionSchema.model_validate(institutions)

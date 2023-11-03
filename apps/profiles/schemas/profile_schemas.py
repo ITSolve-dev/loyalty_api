@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 
 from core import OrmSchema, DateTimeMixinSchema
 
+from apps.institutions.entities import InstitutionEntity
 from apps.users.schemas import RetrieveUserSchema
 from apps.users.entities import RoleType
 

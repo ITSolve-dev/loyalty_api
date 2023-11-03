@@ -2,7 +2,7 @@ from typing import Sequence
 
 from pydantic import BaseModel
 
-from core import OrmSchema, DateTimeMixinSchema
+from core import OrmSchema, DateTimeMixinSchema, ListModelSchema
 
 from ..entities import InstitutionEntity
 from .institution_type_schemas import RetrieveInstitutionTypeSchema
@@ -24,3 +24,21 @@ class RetrieveInstitutionSchema(InstitutionSchema, DateTimeMixinSchema):
 
 class AddUsersInstitutionSchema(BaseModel):
     user_ids: Sequence[int]
+
+
+class ListInstitutionSchema(ListModelSchema[RetrieveInstitutionSchema]):
+    pass
+
+
+class LoyaltyTicketToInstitutionSchema(BaseModel):
+    amount: int
+    activated: bool
+
+
+class RetrieveInstitutionToCustomerSchema(InstitutionSchema):
+    type: RetrieveInstitutionTypeSchema
+    customer_tickets: list[LoyaltyTicketToInstitutionSchema]
+
+
+class ListInstitutionsToCustomerSchema(ListModelSchema[RetrieveInstitutionToCustomerSchema]):
+    pass
